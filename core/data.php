@@ -1,15 +1,16 @@
 <?php
 
+
+
 class Data
 {
-    private $path = "../data.json";
 
-    private $data;
 
     function __construct()
     {
 
-        $file = file_get_contents($this->path);
+        $path = dirname(__FILE__) . "/../data.json";
+        $file = file_get_contents($path);
 
         $this->data = json_decode($file, true);
     }
@@ -34,15 +35,27 @@ class Data
         return false;
     }
 
-    function addAccount($name, $secret)
+    function addAccount($id, $name, $key, $secret)
     {
-        array_push($this->data["accounts"], [
-            "id" => random_int(10000, 99999999999),
-            "key" => $secret,
+        $this->deleteAccount($id);
+        $account = [
+            "id" => $id,
+            "key" => $key,
+            "secret" => $secret,
             "name" => $name,
-        ]);
+        ];
+
+
+        array_push($this->data["accounts"], $account);
 
         $this->save();
+    }
+
+    function getAccount($id)
+    {
+        foreach ($this->data["accounts"] as $_ => $value) {
+            if ($value["id"] == $id) return $value;
+        }
     }
 
     function deleteTweet($id)
@@ -54,6 +67,19 @@ class Data
             }
         }
         $this->data["tweets"] = $tweets;
+
+        $this->save();
+    }
+
+    function deleteAccount($id)
+    {
+        $accounts = [];
+        foreach ($this->data["accounts"] as $key => $value) {
+            if ($value["id"] != $id) {
+                $accounts[] = $value;
+            }
+        }
+        $this->data["accounts"] = $accounts;
 
         $this->save();
     }
