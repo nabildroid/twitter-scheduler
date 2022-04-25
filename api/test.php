@@ -5,4 +5,6 @@
 require_once dirname(__FILE__) . "/../core/twitter.php";
 
 
-$twitter = new Twitter("1119735903197564928");
+$data = Data::init();
+
+echo $data->login("admin","admin");

@@ -21,8 +21,13 @@ $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $request_token['oa
 
 $access_token = $connection->oauth("oauth/access_token", ["oauth_verifier" => $_REQUEST['oauth_verifier']]);
 
-$data = new Data();
+$data = Data::init();
 
 
 
 $data->addAccount($access_token["user_id"], $access_token["screen_name"], $access_token["oauth_token"], $access_token["oauth_token_secret"]);
+
+
+
+header('Location: ' . "/scheduler");
+exit();

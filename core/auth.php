@@ -1,15 +1,17 @@
 <?php
 
-
 $auth =  $_SERVER['HTTP_AUTH'];
+
 
 if (empty($auth)) exit;
 
 
-require_once(__DIR__ . "../core/data.php");
+require_once dirname(__FILE__) . "/./data.php";
 
-$data  = new Data();
 
-if (!$data->checkAuth($auth)) {
+$data  = Data::init();
+if (!$data->checkAuth(intval($auth))) {
     exit();
 }
+
+

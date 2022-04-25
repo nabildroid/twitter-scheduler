@@ -17,9 +17,8 @@ class Twitter
 
     function __construct($accountId)
     {
-        $this->data = new Data();
+        $this->data =  Data::init();
         $account = $this->data->getAccount($accountId);
-
         $this->client = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $account['key'], $account['secret']);
     }
 
@@ -29,7 +28,7 @@ class Twitter
         $hashtags = [];
         $data = $this->get("trends/place", ["id" => $countryId]);
         foreach ($data[0]["trends"] as $item)
-            $hashtags[] = str_replace("#","",str_replace("_"," ",$item["name"]));
+            $hashtags[] = str_replace("#", "", str_replace("_", " ", $item["name"]));
 
         return $hashtags;
     }
@@ -46,14 +45,14 @@ class Twitter
     }
 
 
-    private function get($req, $params=[])
+    private function get($req, $params = [])
     {
 
         $data = $this->client->get($req, $params);
         return json_decode(json_encode($data), true);
     }
 
-    private function post($req, $params=[])
+    private function post($req, $params = [])
     {
         $data = $this->client->post($req, $params);
         return json_decode(json_encode($data), true);

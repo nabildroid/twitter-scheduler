@@ -6,7 +6,16 @@ class Data
 {
 
 
-    function __construct()
+    private static $_instance;
+
+    static function init()
+    {
+        if (Data::$_instance) return Data::$_instance;
+        Data::$_instance = new Data();
+        return Data::$_instance;
+    }
+
+    private function __construct()
     {
 
         $path = dirname(__FILE__) . "/../data.json";
@@ -18,7 +27,8 @@ class Data
 
     function checkAuth($auth)
     {
-        return $this->data["auth"] == $auth;
+
+        return $this->data["login"]["auth"] == $auth;
     }
 
     function login($name, $password)
@@ -26,9 +36,11 @@ class Data
         $login =  $this->data["login"];
 
         if ($name == $login["username"] && $password == $login["password"]) {
-            $rand = random_bytes(250);
+            $rand =  random_int(1, 100000000000);
             $this->data["login"]["auth"] = $rand;
+
             $this->save();
+
             return $rand;
         }
 
@@ -51,10 +63,24 @@ class Data
         $this->save();
     }
 
+
+    function getAccounts()
+    {
+        $accounts = [];
+
+        foreach ($this->data["accounts"] as $account) {
+            $accounts[] = [
+                'id' => $account['id'],
+                'name' => $account['name'],
+            ];
+        }
+
+        return $accounts;
+    }
     function getAccount($id)
     {
         foreach ($this->data["accounts"] as $_ => $value) {
-            if ($value["id"] == $id) return $value;
+            if (intval($value["id"]) == $id) return $value;
         }
     }
 
@@ -84,47 +110,84 @@ class Data
         $this->save();
     }
 
-    function addTweet($content, $accounts, $interval)
+    function getTweets()
+    {
+        return $this->data["tweets"];
+    }
+
+    function addTweet($content, $accounts, $countries, $interval)
     {
         $tweet = [
             "id" => random_int(10000, 99999999999),
             "content" => $content,
             "accounts" => $accounts,
             "interval" => $interval,
+            "countries" => $countries,
             "updated" => time(),
         ];
 
         array_push($this->data["tweets"], $tweet);
 
         $this->save();
+
+        return $tweet;
     }
 
-    function updateTweet($id, $content, $accounts, $interval)
+
+    function checkTweet($id)
     {
         foreach ($this->data["tweets"] as $_ => $value) {
             if ($value["id"] == $id) {
+                $value["updated"] = time();
+
                 $this->deleteTweet($value["id"]);
+
+                array_push($this->data["tweets"], $value);
+
+                $this->save();
+
+                return $value;
+            }
+        }
+    }
+
+    function updateTweet($id, $content, $accounts, $countries, $interval)
+    {
+        foreach ($this->data["tweets"] as $_ => $value) {
+            if ($value["id"] == $id) {
                 if ($content) {
                     $value["content"] = $content;
                 }
                 if ($accounts) {
                     $value["accounts"] = $accounts;
                 }
+                if ($countries) {
+                    $value["countries"] = $countries;
+                }
                 if ($interval) {
                     $value["interval"] = $interval;
                 }
-                break;
+
+                $this->deleteTweet($value["id"]);
+
+
 
                 array_push($this->data["tweets"], $value);
 
+
                 $this->save();
+
+                return $value;
             }
         }
     }
 
     private function save()
     {
+
+        $path = dirname(__FILE__) . "/../data.json";
+
         $data = json_encode($this->data);
-        file_put_contents($this->path, $data);
+        file_put_contents($path, $data);
     }
 }

@@ -3,6 +3,6 @@
 
 // TWITTER CONFIG
 
-define('CONSUMER_KEY', "Bv1QqRFtddaBohDsXTyHxOAlq");
-define('CONSUMER_SECRET', "u0slxRXjm5bQ9PcmQLyBOu2jRvKL5t8XFdM5kQjo7QMmL3W4Za");
+define('CONSUMER_KEY', "");
+define('CONSUMER_SECRET', "");
 define('OAUTH_CALLBACK', "http://localhost/twitter-scheduler/auth/callback.php");

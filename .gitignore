@@ -478,4 +478,4 @@ composer.lock
 
 node_modules
 
-data.json
+/data.json
