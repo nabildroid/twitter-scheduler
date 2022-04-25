@@ -1,0 +1,16 @@
+{
+    "login": { "username": "admin", "password": "admin" },
+    "accounts": [
+        { "id": "dsdsd", "name": "dsds", "key": "tsdtsd" },
+        { "id": 92845261504, "key": "secret account", "name": "nabil" }
+    ],
+    "tweets": [
+        {
+            "id": "dsdsdsdsd",
+            "accounts": ["dsdsd", "dsd"],
+            "content": "dsdsdsdsd",
+            "interval": 57787878,
+            "last_update": "sdsdsdssd"
+        }
+    ]
+}
